@@ -1,3 +1,4 @@
+import cgi
 from pathlib import Path
 from database import conn
 
@@ -31,6 +32,15 @@ def render_template(template_name, **context):
     return template.format(**context).encode("utf-8")
 
 
+def add_new_post(post):
+    cursor = conn.cursor()
+    cursor.execute(
+        f"""INSERT INTO post (title, content, author)
+        VALUES ('{post["title"]}', '{post["content"]}', '{post["author"]}');"""
+    )
+    conn.commit()
+
+
 def application(environ, start_response):
     """Aplicação WSGI"""
     # retorno padrão
@@ -54,8 +64,20 @@ def application(environ, start_response):
             "post.template.html",
             post=get_posts_from_database(post_id=post_id)[0]
         )
+        status = "200 OK"    
+    elif path == "/new" and method == "GET":
+        body = render_template("form.template.html")
         status = "200 OK"
-
+    elif path == "/new" and method == "POST":
+        form = cgi.FieldStorage(
+            fp=environ["wsgi.input"],
+            environ=environ,
+            keep_blank_values=True
+        )
+        post = {item.name:item.value for item in  form.list}
+        add_new_post(post)
+        body = b"New Post created with success"
+        status = "201 Created"
     # criar o response
 
     headers = [("Content-Type", "text/html")]
