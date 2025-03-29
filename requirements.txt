@@ -1,2 +1,6 @@
 gunicorn==23.0.0
 packaging==24.2
+
+# deps jinja2
+MarkupSafe==3.0.2
+jinja2==3.1.6
