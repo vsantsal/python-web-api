@@ -1,4 +1,5 @@
 import cgi
+import json
 from database import conn
 
 from jinja2 import Environment, FileSystemLoader
@@ -42,6 +43,7 @@ def application(environ, start_response):
     # retorno padrão
     body = b"Content Not Found"
     status = "404 Not Found"
+    content_type = "text/html"
 
     # processar o request
     path = environ.get("PATH_INFO", "/")
@@ -54,6 +56,13 @@ def application(environ, start_response):
             post_list=posts
         )
         status = MENSAGEM_OK
+
+    elif path == "/api" and method == "GET":
+        posts = get_posts_from_database()
+        status = MENSAGEM_OK
+        body = json.dumps(posts).encode("utf-8") # serialização
+        content_type = "application/json"
+
     elif path.split("/")[-1].isdigit() and method == "GET":
         post_id = path.split("/")[-1]
         body = render_template(
@@ -76,7 +85,7 @@ def application(environ, start_response):
         status = "201 Created"
     # criar o response
 
-    headers = [("Content-Type", "text/html")]
+    headers = [("Content-Type", content_type)]
     start_response(status, headers)
 
     return [body]
