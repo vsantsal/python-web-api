@@ -4,3 +4,10 @@ packaging==24.2
 # deps jinja2
 MarkupSafe==3.0.2
 jinja2==3.1.6
+
+# deps flask
+Flask==3.1.0
+itsdangerous==2.2.0
+blinker==1.9.0
+click==8.1.8
+Werkzeug==3.1.3
