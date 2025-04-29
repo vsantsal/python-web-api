@@ -23,7 +23,7 @@ def get_post_by_slug(slug: str) -> dict:
     return post
 
 
-def update_post(slug: str, data: dict) -> dict:
+def update_post_by_slug(slug: str, data: dict) -> dict:
     """
     Atualiza um post no banco de dados.
 
@@ -43,7 +43,7 @@ def new_post(title: str, content: str, published: bool = True) -> str:
     :param published: Se o post está publicado ou não
     :return: Slug do post criado
     """
-    slug = title.replace("  ", "-").replace("_", "-").lower()
+    slug = title.replace(" ", "-").replace("_", "-").lower()
     # TODO: verificar se post com este slug existe
     # TODO: remover acentos do título no slug
     mongo.db.posts.insert_one({
