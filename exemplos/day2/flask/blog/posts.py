@@ -34,7 +34,7 @@ def update_post(slug: str, data: dict) -> dict:
     # TODO: se o título mudar, atualizar o slug (falhar se existir)
     return mongo.db.posts.find_one_and_update({"slug": slug}, {"$set": data})
 
-def new_post(title: str, content: str, published: bool) -> str:
+def new_post(title: str, content: str, published: bool = True) -> str:
     """
     Cria um novo post no banco de dados.
     
@@ -43,7 +43,7 @@ def new_post(title: str, content: str, published: bool) -> str:
     :param published: Se o post está publicado ou não
     :return: Slug do post criado
     """
-    slug = title.replace("  ", "-").replacte("_", "-").lower()
+    slug = title.replace("  ", "-").replace("_", "-").lower()
     # TODO: verificar se post com este slug existe
     # TODO: remover acentos do título no slug
     mongo.db.posts.insert_one({
